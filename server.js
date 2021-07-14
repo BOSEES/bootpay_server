@@ -5,10 +5,12 @@ import cookieParser from "cookie-parser";
 import bodyParser from "body-parser";
 import helmet from "helmet";
 import morgan from "morgan";
-import userRouter from "./routes/user";
-import itemRouter from "./routes/item";
+import mongoose from "mongoose";
+import userRouter from "./routes/users";
+import itemRouter from "./routes/items";
+require("dotenv").config();
 
-require("dot-env").config();
+const cors = require("cors");
 const app = express();
 const {PORT,MONGO_URL} = process.env;
 
@@ -18,9 +20,10 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended:true}))
 app.use(morgan("dev"));
 app.use(cookieParser());
+app.use(cors());
 
 //몽고디비 연결
-mongoose.connnect(MONGO_URL,{
+mongoose.connect(MONGO_URL,{
   useNewUrlParser: true,
   useFindAndModify: false,
   useUnifiedTopology: true,
