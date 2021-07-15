@@ -1,5 +1,7 @@
 import express from "express";
 import User from "../models/user";
+import jwt from "../modules/jwt";
+import authUtil from "../middleWares/auth";
 const app = express();
 
 app.post("/join", (req, res) => {
@@ -22,7 +24,7 @@ app.post("/join", (req, res) => {
 })
 
 app.post("/login", (req, res) => {
-  User.findOne({email: req.body.email}, (error, user) => {
+  User.findOne({email: req.body.email}, async (error, user) => {
     if(!user) {
       return res.json({
         loginSuccess:false,
@@ -34,11 +36,47 @@ app.post("/login", (req, res) => {
         message: "비밀번호가 맞지 않습니다."
       })
     }
+
+    const jwtToken = await jwt.sign(user);
     return res.json({
       loginSuccess:true,
-      user
+      userInfo : {
+        username: user.name,
+        email: user.email,
+        address: user.address,
+        phone: user.phone
+      },
+      token: jwtToken.token
     })
   })
 })
+
+app.post("/check", authUtil.checkToken ,(req, res) => {
+  return res.json({
+    successCheck: true,
+    message: "유효한 정보입니다."
+  })
+})
+
+// app.get("/check/:id", (req, res) => {
+//   User.findOne({email: req.params.id}, (error, user) => {
+//     if (!user) {
+//       return res.json({
+//         check: false,
+//         message: "유저정보가 없습니다."
+//       })
+//     }
+
+//     return res.json({
+//       check: true,
+//       userInfo : {
+//         username: user.name,
+//         email: user.email,
+//         address: user.address,
+//         phone: user.phone
+//       }
+//     })
+//   })
+// })
 
 export default app;

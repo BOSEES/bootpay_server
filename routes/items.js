@@ -2,7 +2,7 @@ import express from "express";
 import Item from "../models/item";
 const app = express();
 
-app.post("create-item", (req, res) => {
+app.post("/item", (req, res) => {
   const item = new Item(req.body);
   
   item.save((error, itemInfo) => {
