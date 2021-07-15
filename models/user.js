@@ -1,4 +1,6 @@
 import mongoose from "mongoose";
+import bcrypt from "bcrypt";
+const saltRounds = 10;
 
 const userSchema = new mongoose.Schema({
   name: {
@@ -33,6 +35,35 @@ const userSchema = new mongoose.Schema({
     default: Date.now
   }
 });
+
+userSchema.pre("save", function (next){
+  let user = this;
+  if (user.isModified("password")) {
+    bcrypt.genSalt(saltRounds, function (error, salt) {
+      if (error) {
+        return next(error) 
+      } else {
+        bcrypt.hash(user.password, salt, function (error, hash){
+          if (error) {
+            return next(error);
+          } else {
+            user.password = hash;
+            next();
+          }
+        })
+      }
+    })
+  } else {
+    return next();
+  }
+})
+
+userSchema.methods.comparePassword = function(plainPassword, cb) {
+  bcrypt.compare(plainPassword,this.password,function(err, isMatch) {
+    if (err) return cb(err);
+    cb(null, isMatch);
+  })
+}
 
 const User = mongoose.model("User", userSchema);
 

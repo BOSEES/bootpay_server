@@ -30,23 +30,23 @@ app.post("/login", (req, res) => {
         loginSuccess:false,
         message: "제공된 이메일에 해당하는 유저가 없습니다."
       })
-    } else if (user.password !== req.body.password) {
-      return res.json({
-        loginSuccess:false,
-        message: "비밀번호가 맞지 않습니다."
-      })
     }
-
-    const jwtToken = await jwt.sign(user);
-    return res.json({
-      loginSuccess:true,
-      userInfo : {
-        username: user.name,
-        email: user.email,
-        address: user.address,
-        phone: user.phone
-      },
-      token: jwtToken.token
+    
+    user.comparePassword(req.body.password, async (error, isMatch) => {
+      if (!isMatch) {
+        return res.json({loginSuccess: false, message: "비밀번호가 틀렸습니다."});
+      }
+      const jwtToken = await jwt.sign(user);
+      return res.json({
+        loginSuccess:true,
+        userInfo : {
+          username: user.name,
+          email: user.email,
+          address: user.address,
+          phone: user.phone
+        },
+        token: jwtToken.token
+      })
     })
   })
 })
@@ -57,26 +57,5 @@ app.post("/check", authUtil.checkToken ,(req, res) => {
     message: "유효한 정보입니다."
   })
 })
-
-// app.get("/check/:id", (req, res) => {
-//   User.findOne({email: req.params.id}, (error, user) => {
-//     if (!user) {
-//       return res.json({
-//         check: false,
-//         message: "유저정보가 없습니다."
-//       })
-//     }
-
-//     return res.json({
-//       check: true,
-//       userInfo : {
-//         username: user.name,
-//         email: user.email,
-//         address: user.address,
-//         phone: user.phone
-//       }
-//     })
-//   })
-// })
 
 export default app;
