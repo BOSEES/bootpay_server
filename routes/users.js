@@ -2,6 +2,8 @@ import express from "express";
 import User from "../models/user";
 import jwt from "../modules/jwt";
 import authUtil from "../middleWares/auth";
+import bootpayServer from "../modules/bootpayToken";
+
 const app = express();
 
 app.post("/join", (req, res) => {
@@ -36,6 +38,7 @@ app.post("/login", (req, res) => {
       if (!isMatch) {
         return res.json({loginSuccess: false, message: "비밀번호가 틀렸습니다."});
       }
+      const bootpayToken = await bootpayServer.getAccessToken();
       const jwtToken = await jwt.sign(user);
       return res.json({
         loginSuccess:true,
@@ -45,7 +48,8 @@ app.post("/login", (req, res) => {
           address: user.address,
           phone: user.phone
         },
-        token: jwtToken.token
+        token: jwtToken.token,
+        bootpayToken : bootpayToken.data.token,
       })
     })
   })
