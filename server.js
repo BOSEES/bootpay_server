@@ -47,7 +47,7 @@ app.use(expressSession({
 //API 라우터
 app.use("/user", userRouter);
 app.use("/item", itemRouter);
-app.use("/verify", verifyRouter);
+app.use("/verify", verifyRouter)
 
 app.listen (PORT, () => {
   console.log(`서버실행 http://localhost:${PORT}`);
