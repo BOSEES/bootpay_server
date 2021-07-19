@@ -33,7 +33,8 @@ const userSchema = new mongoose.Schema({
   created: {
     type: Date,
     default: Date.now
-  }
+  },
+  buy : [Object]
 });
 
 userSchema.pre("save", function (next){
