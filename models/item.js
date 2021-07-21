@@ -11,7 +11,7 @@ const itemSchema = new mongoose.Schema({
     required: true
   },
   unique:{
-    type: Number,
+    type: String,
     unique:true,
     required: true
   },

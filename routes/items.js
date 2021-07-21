@@ -1,8 +1,10 @@
 import express from "express";
+import authUtil from "../middleWares/auth";
 import Item from "../models/item";
 const app = express();
 
-app.post("/item", (req, res) => {
+//상품 등록하기
+app.post("/item",authUtil.checkToken, (req, res) => {
   const item = new Item(req.body);
   
   item.save((error, itemInfo) => {
@@ -21,6 +23,7 @@ app.post("/item", (req, res) => {
   })
 })
 
+//상품 전체 조회하기
 app.get("/items", (req, res) => {
   Item.find({}, (error, items) => {
     if (error) {

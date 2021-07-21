@@ -44,7 +44,7 @@ app.post("/login", (req, res) => {
           userInfo : {
             username: user.name,
             email: user.email,
-            address: user.address,
+            addr: user.address,
             phone: user.phone
           },
           token: jwtToken.token,

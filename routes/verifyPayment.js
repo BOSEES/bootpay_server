@@ -1,6 +1,7 @@
 import express from "express";
 import bootpayToken from "../modules/bootpayToken";
 import Item from "../models/item";
+import User from "../models/user";
 const app = express();
 
 app.post("/paycheck", (req, res) => {
@@ -13,6 +14,16 @@ app.post("/paycheck", (req, res) => {
           if (_response.data.price === req.body.price && _response.data.status === 1) {
             // TODO: 이곳이 상품 지급 혹은 결제 완료 처리를 하는 로직으로 사용하면 됩니다.
             console.log("결제검증 true");
+            Item.updateOne({unique: req.body.params.unique},
+              {$inc: {qty: -req.body.params.qty}}, (error,item) => {
+                if (error) {
+                  console.log(error);
+                }
+                // User.updateOne({email: req.body.params.email}, {$push: })
+              });
+            return res.json({
+              message: "결제 성공"
+            });
           }
         }
       });
