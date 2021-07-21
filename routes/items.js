@@ -21,4 +21,20 @@ app.post("/item", (req, res) => {
   })
 })
 
+app.get("/items", (req, res) => {
+  Item.find({}, (error, items) => {
+    if (error) {
+      return res.json({
+        success: false,
+        message: "상품 조회 실패",
+        error
+      })
+    } else {
+      return res.json({
+        items
+      });
+    }
+  })
+})
+
 export default app;
