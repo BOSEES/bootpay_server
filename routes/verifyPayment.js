@@ -2,6 +2,7 @@ import express from "express";
 import bootpayToken from "../modules/bootpayToken";
 import Item from "../models/item";
 import User from "../models/user";
+import authUtil from "../middleWares/auth";
 const app = express();
 
 app.post("/paycheck", (req, res) => {
@@ -19,7 +20,19 @@ app.post("/paycheck", (req, res) => {
                 if (error) {
                   console.log(error);
                 }
-                // User.updateOne({email: req.body.params.email}, {$push: })
+                User.updateOne({email: req.body.params.email},
+                  {$push: {buy: {
+                    receiptId: _response.data.receipt_id,
+                    itemImage: req.body.params.itemImage,
+                    name: req.body.params.name,
+                    price: _response.data.price,
+                    qty: req.body.params.qty,
+                  }
+                }}, (error, update) => {
+                  if (error) {
+                    console.log(error,"내가 산 목록에 담지 못했습니다.")
+                  }
+                })
               });
             return res.json({
               message: "결제 성공"
@@ -31,23 +44,38 @@ app.post("/paycheck", (req, res) => {
   })
 })
 
-app.post("/cancel", (req, res) => {
+app.post("/cancel",authUtil.checkToken, (req, res) => {
   bootpayToken.getAccessToken()
   .then((token) => {
     if (token.status === 200) {
-      RestClient.cancel({
+      bootpayToken.cancel({
           receiptId: req.body.receipt_id,
           price: req.body.price,
           name: req.body.name,
           reason: req.body.reason
       }).then(function (response) {
-    // 결제 취소가 완료되었다면
-    if (response.status === 200) {
-      // TODO: 결제 취소에 관련된 로직을 수행하시면 됩니다.
-      console.log("결제 취소 완료");
+        // 결제 취소가 완료되었다면
+        if (response.status === 200) {
+          // TODO: 결제 취소에 관련된 로직을 수행하시면 됩니다.
+          User.updateOne({email: req.body.email},
+            {$pull: {buy: {receiptId: req.body.receipt_id}}},
+          (error, user) => {
+            if(error) {
+              console.log(error);
+              return res.json({
+                success:false,
+                message: "결제 취소 실패"
+              })
+            } else {
+              return res.json({
+                success:true,
+                message: "결제 취소 완료"
+              })
+            }
+          })
+        }
+      });
     }
-  });
-}
   })
 })
 

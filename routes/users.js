@@ -63,4 +63,20 @@ app.post("/check", authUtil.checkToken ,(req, res) => {
   })
 })
 
+app.get("/bought/:id", authUtil.checkToken ,(req, res) => {
+  User.findOne({email: req.params.id},{
+    password: false,
+    name:false,
+    phone:false,
+    email:false,
+    address:false
+  }, (error, user) => {
+    if (error) {
+      return res.json(error)
+    } else {
+      return res.json(user);
+    }
+  })
+})
+
 export default app;
