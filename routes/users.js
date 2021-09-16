@@ -1,7 +1,7 @@
 import express from "express";
-import User from "../models/user";
-import jwt from "../modules/jwt";
-import authUtil from "../middleWares/auth";
+import User from "../models/user.js";
+import jwt from "../modules/jwt.js";
+import authUtil from "../middleWares/auth.js";
 const app = express();
 
 app.post("/join", (req, res) => {

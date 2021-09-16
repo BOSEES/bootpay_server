@@ -1,8 +1,8 @@
 import express from "express";
-import bootpayToken from "../modules/bootpayToken";
-import Item from "../models/item";
-import User from "../models/user";
-import authUtil from "../middleWares/auth";
+import bootpayToken from "../modules/bootpayToken.js";
+import Item from "../models/item.js";
+import User from "../models/user.js";
+import authUtil from "../middleWares/auth.js";
 const app = express();
 
 app.post("/paycheck", (req, res) => {

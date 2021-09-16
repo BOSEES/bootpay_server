@@ -1,9 +1,9 @@
-import { RestClient } from '@bootpay/server-rest-client';
-import bootpayKey from "../config/bootpayKey";
+import bootpay from '@bootpay/server-rest-client';
+import bootpayKey from "../config/bootpayKey.js";
 
-RestClient.setConfig(
+bootpay.RestClient.setConfig(
 	bootpayKey.ApplicationId,
 	bootpayKey.PrivateKey
 );
 
-export default RestClient;
+export default bootpay.RestClient;

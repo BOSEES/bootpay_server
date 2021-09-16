@@ -1,7 +1,7 @@
 import randToken from "rand-token";
 import jwt from "jsonwebtoken";
-import { secretKey } from "../config/jwtSecretKey";
-import { options } from "../config/jwtSecretKey";
+import { secretKey } from "../config/jwtSecretKey.js";
+import { options } from "../config/jwtSecretKey.js";
 const TOKEN_EXPIRED = -3;
 const TOKEN_INVALID = -2;
 

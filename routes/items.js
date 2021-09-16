@@ -1,6 +1,6 @@
 import express from "express";
-import authUtil from "../middleWares/auth";
-import Item from "../models/item";
+import authUtil from "../middleWares/auth.js";
+import Item from "../models/item.js";
 const app = express();
 
 //상품 등록하기

@@ -1,6 +1,6 @@
-import jwt from "../modules/jwt";
-import MSG from "../modules/responseMessage";
-import CODE from "../modules/statusCode";
+import jwt from "../modules/jwt.js";
+import MSG from "../modules/responseMessage.js";
+import CODE from "../modules/statusCode.js";
 const TOKEN_EXPIRED = -3;
 const TOKEN_INVALID = -2;
 

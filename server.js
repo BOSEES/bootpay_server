@@ -6,13 +6,13 @@ import bodyParser from "body-parser";
 import helmet from "helmet";
 import morgan from "morgan";
 import mongoose from "mongoose";
-import userRouter from "./routes/users";
-import itemRouter from "./routes/items";
-import verifyRouter from "./routes/verifyPayment";
+import userRouter from "./routes/users.js";
+import itemRouter from "./routes/items.js";
+import verifyRouter from "./routes/verifyPayment.js";
+import dotenv from "dotenv";
+dotenv.config();
+import cors from "cors";
 
-require("dotenv").config();
-
-const cors = require("cors");
 const app = express();
 const {PORT,MONGO_URL} = process.env;
 
